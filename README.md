@@ -1,4 +1,4 @@
-# Group YYY - {Short snappy Title of your project}
+# Group 41 - {Analysis of Extreme Weather Events}
 
 - Your title can change over time.
 
@@ -8,7 +8,7 @@ Details for Milestone are available on Canvas (left sidebar, Course Project) or 
 
 ## Describe your topic/interest in about 150-200 words
 
-{Add your stuff here}
+We are looking to examine extreme weather events 
 
 ## Describe your dataset in about 150-200 words
 
@@ -16,9 +16,9 @@ Details for Milestone are available on Canvas (left sidebar, Course Project) or 
 
 ## Team Members
 
-- Person 1: one sentence about you!
-- Person 2: one sentence about you!
-- Person 3: one sentence about you!
+- Brandon Boscher: 4th year Civil Engineering Student
+- Endrio Rambelli: 4th year Mechanical Engineering Student
+- Chris Thornton: 4th year Civil Engineering Student
 
 ## References
 
