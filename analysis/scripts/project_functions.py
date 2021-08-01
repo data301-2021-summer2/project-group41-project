@@ -39,35 +39,41 @@ def load_n_process(file_path):
 # In[ ]:
 
 def load_and_process_brandon(filepath1,filepath2,filepath3):
-    #Chain 1: Dropping 
-    dff = pd.read_csv(filepath1, encoding = 'ISO-8859-1', low_memory=False)
-    dff = (
-        dff.drop(columns=["FOD_ID","FPA_ID","SOURCE_SYSTEM_TYPE","SOURCE_SYSTEM","NWCG_REPORTING_AGENCY","NWCG_REPORTING_UNIT_ID","NWCG_REPORTING_UNIT_NAME","SOURCE_REPORTING_UNIT","SOURCE_REPORTING_UNIT_NAME","LOCAL_FIRE_REPORT_ID","LOCAL_INCIDENT_ID","FIRE_CODE","FIRE_NAME","ICS_209_PLUS_INCIDENT_JOIN_ID","ICS_209_PLUS_COMPLEX_JOIN_ID","MTBS_ID","MTBS_FIRE_NAME","COMPLEX_NAME","DISCOVERY_DATE","DISCOVERY_DOY","DISCOVERY_TIME","NWCG_GENERAL_CAUSE","NWCG_CAUSE_AGE_CATEGORY","CONT_DATE","CONT_DOY","CONT_TIME","LATITUDE","LONGITUDE","OWNER_DESCR","COUNTY","FIPS_CODE","FIPS_NAME"])
-        .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Human'].index)
-        .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Missing data/not specified/undetermined'].index)
-        .dropna()
-        .drop(dff[(dff.FIRE_SIZE_CLASS == 'A')].index)
-        .drop(columns=['NWCG_CAUSE_CLASSIFICATION'])
-    )
+    dff = pd.read_csv('C:/Users/Don/Desktop/FiresNEW.csv', encoding = 'ISO-8859-1', low_memory=False)
+        dff = (
+            dff.drop(columns=["FOD_ID","FPA_ID","SOURCE_SYSTEM_TYPE","SOURCE_SYSTEM","NWCG_REPORTING_AGENCY","NWCG_REPORTING_UNIT_ID","NWCG_REPORTING_UNIT_NAME","SOURCE_REPORTING_UNIT","SOURCE_REPORTING_UNIT_NAME","LOCAL_FIRE_REPORT_ID","LOCAL_INCIDENT_ID","FIRE_CODE","FIRE_NAME","ICS_209_PLUS_INCIDENT_JOIN_ID","ICS_209_PLUS_COMPLEX_JOIN_ID","MTBS_ID","MTBS_FIRE_NAME","COMPLEX_NAME","DISCOVERY_DATE","DISCOVERY_DOY","DISCOVERY_TIME","NWCG_GENERAL_CAUSE","NWCG_CAUSE_AGE_CATEGORY","CONT_DATE","CONT_DOY","CONT_TIME","LATITUDE","LONGITUDE","OWNER_DESCR","COUNTY","FIPS_CODE","FIPS_NAME"])
+            .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Human'].index)
+            .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Missing data/not specified/undetermined'].index)
+            .dropna()
+            .drop(columns=['NWCG_CAUSE_CLASSIFICATION'])
+        )
+    dff = dff.drop(dff[(dff['FIRE_SIZE_CLASS'] == 'A')].index)
+    dff.head()
 
 
-    dfstate = pd.read_csv(filepath2)
-    dfstate = (
-        dfstate.drop(columns='Abbrev')
-        .rename(columns={'Code':'STATE'})
-    )
 
-    df3 = (
-        df1.set_index('STATE').combine_first(dfstate.set_index('STATE'))
-        .reset_index(inplace=True)
-        .drop(columns='STATE')
-        .dropna()
-        .rename(columns={'FIRE_YEAR':'Date','State':'Location'})
-    )
-    df2['Date'] = df2['Date'].astype(int)
-
+        dfstate = pd.read_csv('C:/Users/Don/Desktop/csvData.csv')
+        dfstate = (
+            dfstate.drop(columns='Abbrev')
+            .rename(columns={'Code':'STATE'})
+        )
     
-    dftemp=pd.read_csv(filepath3)
+    
+   
+
+        df3 = (
+            dff.set_index('STATE').combine_first(dfstate.set_index('STATE'))
+            .reset_index()
+            .drop(columns='STATE')
+            .dropna()
+            .rename(columns={'FIRE_YEAR':'Date','State':'Location'})
+        )
+        df3['Date'] = df3['Date'].astype(int)
+    df3
+
+
+
+    dftemp=pd.read_csv('C:/Users/Don/Desktop/tavg.csv')
     f = lambda dftemp : dftemp['Location'].split("CD")
     dftemp['Location'] = dftemp.apply(f, axis=1)
     g = lambda dftemp : dftemp['Location'].pop(0)
@@ -89,16 +95,18 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
 
 
     dffinal = (
-        df2.groupby(['Date','Location']).size()
+        df3.groupby(['Date','Location']).size()
         .to_frame()
-        .reset_index(inplace = True)
-        .drop(dffinal[dffinal.Location == 'Alaska'].index)
-        .drop(dffinal[dffinal.Location == 'Hawaii'].index)
-        .sort_values(by=['Location','Date'])
+        .reset_index()
+    )
+    df3.drop(df3[df3.Location == 'Alaska'].index)
+    df3.drop(df3[df3.Location == 'Hawaii'].index)
+    dffinal = (    
+        dffinal.sort_values(by=['Location','Date'])
         .rename(columns={0: '# of Fires'})
         .reset_index(drop=True)
-        .reset_index(drop=False)
-    )
+         .reset_index(drop=False)
+        )
 
     d1=dffinal
     d1 = d1.drop(columns=['index'])
@@ -119,15 +127,5 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
     dffinal = pd.merge(d1,dftemp100,how='right',on='id')
     dffinal = dffinal.drop(columns=['id'])
 
-    return dffinal
-
-
-
-
-
-
-
-
-
-
+    dffinal.head()
 
