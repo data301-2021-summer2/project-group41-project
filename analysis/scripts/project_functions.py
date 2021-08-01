@@ -37,6 +37,3 @@ def load_n_process(file_path):
 
 # In[ ]:
 
-
-
-
