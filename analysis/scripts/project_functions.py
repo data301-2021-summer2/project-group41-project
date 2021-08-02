@@ -33,52 +33,49 @@ def load_n_process(file_path):
 
     df=df2
     return df
-<<<<<<< HEAD
-=======
 
->>>>>>> brandon_methon_chain
 
 
 # In[ ]:
 
-<<<<<<< HEAD
-=======
+#defining function for Brandon's datasets
 def load_and_process_brandon(filepath1,filepath2,filepath3):
-    dff = pd.read_csv('C:/Users/Don/Desktop/FiresNEW.csv', encoding = 'ISO-8859-1', low_memory=False)
-        dff = (
-            dff.drop(columns=["FOD_ID","FPA_ID","SOURCE_SYSTEM_TYPE","SOURCE_SYSTEM","NWCG_REPORTING_AGENCY","NWCG_REPORTING_UNIT_ID","NWCG_REPORTING_UNIT_NAME","SOURCE_REPORTING_UNIT","SOURCE_REPORTING_UNIT_NAME","LOCAL_FIRE_REPORT_ID","LOCAL_INCIDENT_ID","FIRE_CODE","FIRE_NAME","ICS_209_PLUS_INCIDENT_JOIN_ID","ICS_209_PLUS_COMPLEX_JOIN_ID","MTBS_ID","MTBS_FIRE_NAME","COMPLEX_NAME","DISCOVERY_DATE","DISCOVERY_DOY","DISCOVERY_TIME","NWCG_GENERAL_CAUSE","NWCG_CAUSE_AGE_CATEGORY","CONT_DATE","CONT_DOY","CONT_TIME","LATITUDE","LONGITUDE","OWNER_DESCR","COUNTY","FIPS_CODE","FIPS_NAME"])
-            .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Human'].index)
-            .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Missing data/not specified/undetermined'].index)
-            .dropna()
-            .drop(columns=['NWCG_CAUSE_CLASSIFICATION'])
+    dff = pd.read_csv(filepath1, encoding = 'ISO-8859-1', low_memory=False)
+   #Dropping all irrelevant columns and data via method chain
+    dff = (
+        dff.drop(columns=["FOD_ID","FPA_ID","SOURCE_SYSTEM_TYPE","SOURCE_SYSTEM","NWCG_REPORTING_AGENCY","NWCG_REPORTING_UNIT_ID","NWCG_REPORTING_UNIT_NAME","SOURCE_REPORTING_UNIT","SOURCE_REPORTING_UNIT_NAME","LOCAL_FIRE_REPORT_ID","LOCAL_INCIDENT_ID","FIRE_CODE","FIRE_NAME","ICS_209_PLUS_INCIDENT_JOIN_ID","ICS_209_PLUS_COMPLEX_JOIN_ID","MTBS_ID","MTBS_FIRE_NAME","COMPLEX_NAME","DISCOVERY_DATE","DISCOVERY_DOY","DISCOVERY_TIME","NWCG_GENERAL_CAUSE","NWCG_CAUSE_AGE_CATEGORY","CONT_DATE","CONT_DOY","CONT_TIME","LATITUDE","LONGITUDE","OWNER_DESCR","COUNTY","FIPS_CODE","FIPS_NAME"])
+        .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Human'].index)
+        .drop(dff[dff.NWCG_CAUSE_CLASSIFICATION == 'Missing data/not specified/undetermined'].index)
+        .dropna()
+        .drop(columns=['NWCG_CAUSE_CLASSIFICATION'])
         )
     dff = dff.drop(dff[(dff['FIRE_SIZE_CLASS'] == 'A')].index)
     dff.head()
 
 
-
-        dfstate = pd.read_csv('C:/Users/Don/Desktop/csvData.csv')
-        dfstate = (
-            dfstate.drop(columns='Abbrev')
-            .rename(columns={'Code':'STATE'})
+#Cleaning up data via short method chain
+    dfstate = pd.read_csv(filepath2)
+    dfstate = (
+        dfstate.drop(columns='Abbrev')
+        .rename(columns={'Code':'STATE'})
         )
     
     
-   
+#Merging and cleaning up data   
 
-        df3 = (
-            dff.set_index('STATE').combine_first(dfstate.set_index('STATE'))
-            .reset_index()
-            .drop(columns='STATE')
-            .dropna()
-            .rename(columns={'FIRE_YEAR':'Date','State':'Location'})
+    df3 = (
+        dff.set_index('STATE').combine_first(dfstate.set_index('STATE'))
+        .reset_index()
+        .drop(columns='STATE')
+        .dropna()
+        .rename(columns={'FIRE_YEAR':'Date','State':'Location'})
         )
-        df3['Date'] = df3['Date'].astype(int)
+    df3['Date'] = df3['Date'].astype(int)
     df3
 
 
-
-    dftemp=pd.read_csv('C:/Users/Don/Desktop/tavg.csv')
+#Reading in third data set, I found it easier not to use a method chain due to the individual column applications
+    dftemp=pd.read_csv(filepath3)
     f = lambda dftemp : dftemp['Location'].split("CD")
     dftemp['Location'] = dftemp.apply(f, axis=1)
     g = lambda dftemp : dftemp['Location'].pop(0)
@@ -98,7 +95,7 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
     dftemp = dftemp.reset_index(drop = False)
 
 
-
+#Cleaning up merged dataframe
     dffinal = (
         df3.groupby(['Date','Location']).size()
         .to_frame()
@@ -112,7 +109,7 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
         .reset_index(drop=True)
          .reset_index(drop=False)
         )
-
+#Matching indexes of 2 dataframes for ease of merging, created ID to merge on
     d1=dffinal
     d1 = d1.drop(columns=['index'])
     d1['Date']=d1['Date'].values.astype(str)
@@ -120,7 +117,7 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
     d1['id'] = d1['Date'].str.cat(d1['Location'],sep='-')
     d1
 
-
+#Matching indexes of 2 dataframes for ease of merging, created ID to merge on
     dftemp12 = dftemp
     dftemp12 = dftemp12.drop(columns=['index'])
     dftemp12['Date']=dftemp12['Date'].values.astype(str)
@@ -128,10 +125,10 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
     dftemp12['id'] = dftemp12['Date'].str.cat(dftemp12['Location'],sep='-')
     dftemp100 = dftemp12.drop(columns=['Date','Location'])
     dftemp100
-
+#Merging final data frame
     dffinal = pd.merge(d1,dftemp100,how='right',on='id')
     dffinal = dffinal.drop(columns=['id'])
+#Final data frame
+    return dffinal
 
-    dffinal.head()
 
->>>>>>> brandon_methon_chain
