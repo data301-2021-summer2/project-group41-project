@@ -16,7 +16,7 @@ This dataset provided by the US Department of Agriculture is collection of data 
 
 - Brandon Boscher: 4th year Civil Engineering Student
 - Endrio Rambelli: 4th year Mechanical Engineering Student
-- Chris Thornton: 4th year Civil Engineering Student
+
 
 ## References
 
