@@ -1,1 +1,5 @@
-This directory will contain all analysis files either general in this directory or in a subdirectory split by indivual analsyes (brandon,endrio,and chris)
+This directory contains analysis folders for Brandon and Endrio. The combined analysis for Milestone 2 is located in this folder.
+
+WHEN VIEWING ANALYSIS: DOWNLOAD FILES & CHANGE ALL PATHS IN Final_Analysis_Combined.ipynb
+
+We attempted many ways to circumvent downloading, however one of our files was too large. After pushing via git large file storage, it said our repo was out of space and no more pushes were allowed. This was the only option we saw.
