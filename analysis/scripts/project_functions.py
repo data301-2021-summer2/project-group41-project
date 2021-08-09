@@ -127,7 +127,9 @@ def load_and_process_brandon(filepath1,filepath2,filepath3):
     dftemp100
 #Merging final data frame
     dffinal = pd.merge(d1,dftemp100,how='right',on='id')
-    dffinal = dffinal.drop(columns=['id'])
+    dffinal = dffinal.drop_duplicates(subset=['id'])
+    dffinal = dffinal.dropna()
+    dffinal = dffinal.reset_index()
 #Final data frame
     return dffinal
 
